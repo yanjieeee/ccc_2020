@@ -373,8 +373,8 @@ def SearchTweets(DaysLength):
 if __name__ == '__main__':
     # ----------------------------------------------CloudDB-------------------------------------------------------------
 
-    server = couchdb.Server("http://%s:%s@172.26.133.73:5984/" % ('admin', 'admin'))
-    db_name = 'db_status_filter_test'
+    server = couchdb.Server("http://%s:%s@172.26.133.75:5984/" % ('admin', 'admin'))
+    db_name = 'db_tweets_test'
     #
     try:
         db = server.create(db_name)
