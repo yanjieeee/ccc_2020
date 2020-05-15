@@ -375,15 +375,12 @@ if __name__ == '__main__':
 
     server = couchdb.Server("http://%s:%s@172.26.129.211:5984/" % ('admin', 'admin'))
     db_name = 'tweets_raw'
-<<<<<<< HEAD
     #db = server[db_name]
-=======
->>>>>>> 6cb76fff7194ff95fe872d8a726ba5769d729ce5
     #
-    #try:
-    #    db = server.create(db_name)
-    #except:
-    #    db = server[db_name]
+    try:
+        db = server.create(db_name)
+    except:
+        db = server[db_name]
 
     # ----------------------------------------------Stream--------------------------------------------------------------
 
