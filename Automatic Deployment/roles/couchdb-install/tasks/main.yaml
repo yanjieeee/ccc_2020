@@ -1,0 +1,114 @@
+---
+# - name: Gather facts of remote host
+#   setup:
+#     gather_subset: all
+
+# - name: checking for proxy env
+#   shell: cat /etc/environment
+#   register: env_results
+
+# - name: set proxy env
+#   tags: always
+#   become: yes
+#   lineinfile:
+#     path: /etc/environment
+#     line: '{{ proxy }}'
+#     create: yes
+#   #when: env_results.stdout == "-1"
+
+- name: Install dependencies
+  tags: always
+  become: yes
+  apt:
+    name: ['apt-transport-https', 'build-essential', 'ca-certificates', 'curl', 'git', 'python3-dev', 'python3-pip', 'python3-setuptools', 'software-properties-common', 'unzip', 'vim']
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+
+- name: Update pip
+  tags: always
+  become: yes
+  pip:
+    name: ['pip']
+    state: latest
+
+- name: Add Couchdb apt repository key
+  #tags: 'docker'
+  become: yes
+  apt_key:
+    url: https://couchdb.apache.org/repo/bintray-pubkey.asc
+    state: present
+
+- name: Add Couchdb apt repository and update apt cache
+  #tags: 'docker'
+  become: yes
+  apt_repository:
+    repo: "deb https://apache.bintray.com/couchdb-deb bionic main"
+    mode: '644'
+    update_cache: yes
+    state: present
+
+- name: Install Couchdb
+#  tags: 'docker'
+  become: yes
+  apt:
+    name: ['couchdb']
+    state: latest
+    install_recommends: no
+    update_cache: yes
+
+- name: grant couchdb permission to access mounted volume
+  become: yes
+  file:
+    path: /var/lib/volume
+    owner: couchdb
+    group: couchdb
+    mode: 0770
+    recurse: yes
+    state: directory
+    
+- name: Couchdb config local.ini
+  become: yes
+  copy:
+    src: ./templates/local.ini
+    dest: /opt/couchdb/etc
+    mode: "644"
+    backup: no
+
+- name: Couchdb config vm.args replace line
+  become: yes
+  replace:
+    dest: /opt/couchdb/etc/vm.args
+    regexp: '^-name couchdb@127.0.0.1'
+    replace: '-name couchdb@{{ ansible_eth0.ipv4.address }}'
+
+- name: Couchdb config vm.args add line
+  become: yes
+  blockinfile:
+    path: /opt/couchdb/etc/vm.args
+    insertafter: -ssl session_lifetime 300
+    state: present
+    block: |
+      -kernel inet_dist_listen_min 9100
+      -kernel inet_dist_listen_max 9200
+
+- name: Couchdb restart
+  become: yes
+  service:
+    name: couchdb
+    state: restarted
+
+- name: run clustering command at 1 host
+  run_once: true
+  shell: |
+    curl -X POST -H "Content-Type: application/json" http://admin:admin@{{ groups['dataServer'][0] }}:5984/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"admin", "node_count":"2"}'
+    curl -X POST -H "Content-Type: application/json" http://admin:admin@{{ groups['dataServer'][0] }}:5984/_cluster_setup -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "admin", "password":"admin", "port": 5984, "node_count": "2", "remote_node": "{{ groups['dataServer'][1] }}", "remote_current_user": "admin", "remote_current_password": "admin" }'
+    curl -X POST -H "Content-Type: application/json" http://admin:admin@{{ groups['dataServer'][0] }}:5984/_cluster_setup -d '{"action": "add_node", "host":"{{ groups['dataServer'][1] }}", "port": "5984", "username": "admin", "password":"admin"}'
+    curl -X POST -H "Content-Type: application/json" http://admin:admin@{{ groups['dataServer'][0] }}:5984/_cluster_setup -d '{"action": "finish_cluster"}'
+  register: output
+
+- debug:
+    var: output.stdout
+
+

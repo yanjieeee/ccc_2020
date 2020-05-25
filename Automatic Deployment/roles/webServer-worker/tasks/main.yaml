@@ -1,0 +1,43 @@
+---
+
+- name: apt-get update
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: install the packages using apt modules
+  become: yes
+  apt: 
+    name: ['python3-pip','nginx']
+    state: latest
+    install_recommends: no 
+    update_cache: yes
+
+- name: paste web file
+  become: yes
+  copy:
+    src: ./webResource/
+    dest: /var/www/html
+
+- name: modify nginx config 
+  become: yes
+  blockinfile:
+    path: /etc/nginx/nginx.conf
+    insertafter: 	gzip on;
+    state: present
+    block: "server {
+      \nlisten 8080;
+      \nserver_name {{ ansible_eth0.ipv4.address }};
+      \nlocation / { try_files $uri @app;}
+      \nlocation @app {
+        \ninclude uwsgi_params;
+        \nuwsgi_pass 127.0.0.1:8001;
+        \n}
+        \n}"
+
+- name: restart nginx
+  shell: |
+    sudo killall nginx
+    sudo nginx -c /etc/nginx/nginx.conf
+#     sudo killall nginx
+

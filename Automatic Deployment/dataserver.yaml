@@ -1,0 +1,12 @@
+- hosts: dataServer
+  vars_files:
+    - host_vars/nectar.yaml
+    - host_vars/server.yaml
+  gather_facts: true
+
+  roles:
+    - role: proxy-env
+    - role: mount-volumes
+    - role: couchdb-install
+    
+    

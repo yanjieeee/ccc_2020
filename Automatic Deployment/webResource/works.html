@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Home - COMP90024 Group10</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+ 
+        <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+        <script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com.cn/highcharts/modules/oldie.js"></script>
+        <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+
+  <!-- Favicons -->
+  <link href="img/uomIcon.jpg" rel="icon">
+  <link href="img/uomIcon.jpg" rel="uom-icon">
+  
+   <!-- Map View -->
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  
+  <!-- Mapbox API -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+  
+  
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+    Template Name: Instant
+    Template URL: https://templatemag.com/instant-bootstrap-personal-template/
+    Author: TemplateMag.com
+    License: https://templatemag.com/license/
+  ======================================================= -->
+</head>
+
+<body>
+
+  <!-- Static navbar -->
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <a class="navbar-brand" href="index.html">COMP90024 - Group10</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li ><a href="index.html">Home</a></li>
+          <li><a href="Group.html">Group</a></li>
+          <li class="active"><a href="works.html" class="smoothscroll">Works on Map</a></li>
+		     <li><a href="sentiment.html" class="smoothscroll">Sentiment Analysis</a></li>
+          <li><a href="contact.html" class="smoothscroll">Contact</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </div>
+
+<div id="workwrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3">
+        <h4>NEW WEBSITE FOR</h4>
+        <h1>INSTANT</h1>
+        <h4>ROLE: LEAD DESIGNER</h4>
+      </div>
+    </div>
+  </div>
+  <!-- /container -->
+</div>
+
+
+<div id='map' style="height: 100%"></div>
+<!-- Map Information Board-->
+<div class='map-overlay' id='features'><h2>Tweets of COV-19</h2><div id='pd'><p>in Australia</p></div></div>
+<!-- Map Legend-->
+<div class='map-overlay' id='legend'>
+  <div class="dropdown">
+    <button type="button" class="btn dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
+      <h6>Amount</h6>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    </ul>
+  </div>
+</div>
+
+<!-- Map Display Style -->
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  h2,
+  h3 {
+    margin: 10px;
+    font-size: 1.2em;
+  }
+
+  h3 {
+    font-size: 1em;
+  }
+
+  p {
+    font-size: 0.85em;
+    margin: 10px;
+    text-align: left;
+  }
+
+  /**
+  * Create a position for the map
+  * on the page. */
+  #map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
+  /**
+  * Set rules for how the map overlays
+  * (information box and legend) will be displayed
+  * on the page. */
+  .map-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    margin-right: 20px;
+    font-family: Arial, sans-serif;
+    overflow: auto;
+    border-radius: 3px;
+  }
+
+  #features {
+    top: 40px;
+    height: 100px;
+    margin-top: 20px;
+    width: 250px;
+  }
+
+  #legend {
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    line-height: 25px;
+    height: 220px;
+    margin-bottom: 40px;
+    width: 100px;
+  }
+
+  .legend-key {
+    display: inline-block;
+    border-radius: 20%;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+  }
+</style>
+
+<div class="container">
+<script>
+    // Mapbox Access Token
+    mapboxgl.accessToken = 'pk.eyJ1Ijoid2F5dSIsImEiOiJja2FidzIxbWQxbG8zMnNteHMyemRiNXRwIn0.IeDuQgiv0JBagaHcAQNPdA';
+    // Create a new map
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/wayu/ckadhvhfu0h241iljiw3vuikd',  // Load map style
+        center: [134.326164, -27.397418],  // Default center point
+        zoom: 3.08,                         // Default zoom value
+        doubleClickZoom: false,			   // Forbid double-click to zoom
+        pitchWithRotate: false,			   // Forbid pitch with rotate
+        attributionControl: false   	   // Hide attribution information
+    });
+
+    // Set zoom threshold, cities information will show only when the zoom above this value.
+   
+
+    // Set up legend color
+    map.on('load', function() {
+        var layers_angry = ['25000', '20000', '15000', '10000', '50000', '0'];
+        var colors_angry = ['#E74C3C', '#EC7063', '#F1948A', '#F5B7B1', '#FADBD8', '#FDEDEC'];
+        
+        for (i = 0; i < layers_angry.length; i++) {
+            var layer = layers_angry[i];
+            var color = colors_angry[i];
+            var item = document.createElement('div');
+            var key = document.createElement('span');
+            key.className = 'legend-key';
+            key.style.backgroundColor = color;
+
+            var value = document.createElement('span');
+            value.innerHTML = layer;
+            item.appendChild(key);
+            item.appendChild(value);
+            legend.appendChild(item);
+        }
+    });
+
+map.on('click', function(e) {
+  var features = map.queryRenderedFeatures(e.point, {
+    layers: ['state'] // replace this with the name of the layer
+  });
+
+  if (!features.length) {
+    return;
+  }
+
+  var feature = features[0];
+
+  var popup = new mapboxgl.Popup({ offset: [0, -15] })
+    .setLngLat(e.lngLat)
+    .setHTML('<h3>' + feature.properties.STATE_NAME + '</h3><p>' + feature.properties.TW + '</p>')
+       .addTo(map);
+});
+
+// Add geolocate control to the map.
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true
+}));
+   
+</script>
+</div>
+
+<section id="works" style="margin-top: 100px"></section>
+<div class="container">
+  <div class="row centered mt mb">
+    <div class="col-lg-8 col-lg-offset-2">
+      <br><br><br>
+      <h4>Statistical Analysis</h4>
+      <p style="text-align:justify">Our group analysis focus on Tweets of COVID-19 in Australia, we compared the percentage of population 
+	  of each state and city with the amount of Tweets about COVID-19 in those area, and found that they show the same trend which more tweets
+	  occur with larger population in one area.</p>
+    <br>
+    </div>
+	
+	   <!-- Bar Chart State-->
+    
+    <div id="container1" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;"></div>
+      <script>
+	  var chart1 = Highcharts.chart('container1', {
+	chart1: {
+		type: 'bar'
+	},
+	title: {
+		text: 'Percnetage of population and Tweets in State'
+	},
+	legend: {
+		/* 图例显示顺序反转
+         * 这是因为堆叠的顺序默认是反转的，可以设置 
+         * yAxis.reversedStacks = false 来达到类似的效果 
+         */
+		reversed: true 
+	},
+	xAxis: {
+		categories: [ "New South Wales",
+					 "Victoria",
+					 "Queensland",
+					 "South Australia",
+					 "Tasmania",
+					 "Northern Territory",
+					 "Australian Capital Territory",
+					 "Western Australia" ],
+		title: {
+			text: null
+		}
+	},
+	yAxis: {
+		min: 0,
+		title: {
+			text: 'Percentage of Total',
+			align: 'high'
+		},
+		labels: {
+			overflow: 'justify'
+		}
+	},
+	tooltip: {
+		valueSuffix: '%'
+	},
+	plotOptions: {
+		bar: {
+			dataLabels: {
+				enabled: true,
+				allowOverlap: true // 允许数据标签重叠
+			}
+		}
+	},
+	legend: {
+		layout: 'vertical',
+		align: 'right',
+		verticalAlign: 'top',
+		x: 10,
+		y: 250,
+		floating: true,
+		borderWidth: 1,
+		backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+		shadow: true
+	},
+	series: [{
+	    type: 'bar',
+		name: 'Tweets%',
+		data: [0.36,0.34,0.16,0.06,0.02,0,0,0.07]
+	}, {type: 'bar',
+		name: 'State Population%',
+		data: [0.32,0.26,0.2,0.07,0.02,0.01,0.02,0.1]
+	}]
+});
+      
+      </script>
+    </div>
+
+
+  <!-- Bar Chart City-->
+   <div id="container2" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;"data-highcharts-chart="2"></div>
+      <script>
+	  var chart2 = Highcharts.chart('container2', {
+	chart: {
+		type: 'bar'
+	},
+	title: {
+		text: 'Percnetage of population and Tweets in City'
+	},
+	xAxis: {
+		categories: [  "Sydney",
+        "Melbourne",
+        "Brisbane",
+        "Adelaide",
+        "Perth",
+        "Hobart",
+        "Darwin" ],
+		title: {
+			text: null
+		}
+	},
+	yAxis: {
+		min: 0,
+		title: {
+			text: 'Percentage of Total',
+			align: 'high'
+		},
+		labels: {
+			overflow: 'justify'
+		}
+	},
+	tooltip: {
+		valueSuffix: '%'
+	},
+	plotOptions: {
+		bar: {
+			dataLabels: {
+				enabled: true,
+				allowOverlap: true // 允许数据标签重叠
+			}
+		}
+	},
+	legend: {
+		layout: 'vertical',
+		align: 'right',
+		verticalAlign: 'top',
+		x: 10,
+		y: 250,
+		floating: true,
+		borderWidth: 1,
+		backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+		shadow: true
+	},
+	series: [{
+		name: 'Tweets%',
+		data: [ 0.35,
+        0.37,
+        0.11,
+        0.07,
+        0.09,
+        0.01,
+        0]
+	}, {
+		name: 'City Population%',
+		data: [ 0.32,
+        0.3,
+        0.15,
+        0.08,
+        0.13,
+        0.01,
+        0.01]
+	}]
+});
+      
+      </script>
+	  
+    </div>
+	
+	
+ </div>
+</div>
+
+  <div id="social">
+    <div class="container">
+      <div class="row centered">
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-dribbble"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-facebook"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-twitter"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-linkedin"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-instagram"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-tumblr"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="copyrights">
+    <div class="container">
+      <p>
+        &copy; Copyrights <strong>Instant</strong>. All Rights Reserved
+      </p>
+      <div class="credits">
+        <!--
+          You are NOT allowed to delete the credit link to TemplateMag with free version.
+          You can delete the credit link only if you bought the pro version.
+          Buy the pro version with working PHP/AJAX contact form: https://templatemag.com/instant-bootstrap-personal-template/
+          Licensing information: https://templatemag.com/license/
+        -->
+        Created with Instant template by <a href="https://templatemag.com/">TemplateMag</a>
+      </div>
+    </div>
+  </div>
+  <!-- / copyrights -->
+
+  <!-- JavaScript Libraries -->
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="lib/php-mail-form/validate.js"></script>
+
+  <!-- Template Main Javascript File -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>

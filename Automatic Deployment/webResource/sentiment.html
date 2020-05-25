@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Home - COMP90024 Group10</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+  <meta charset="utf-8"><link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        </style>
+        <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+        <script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com.cn/highcharts/modules/oldie.js"></script>
+        <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+
+  <!-- Favicons -->
+  <link href="img/uomIcon.jpg" rel="icon">
+  <link href="img/uomIcon.jpg" rel="uom-icon">
+  
+   <!-- Map View -->
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  
+  <!-- Mapbox API -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+  
+  
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="css/style.css" rel="stylesheet">
+  
+
+
+<!-- ZUI Javascript 依赖 jQuery -->
+<script src="lib/jquery/jquery.js"></script>
+<!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+<script src="js/zui.min.js"></script>
+<script src="lib/chart/zui.chart.min.js"></script>
+
+
+  <!-- =======================================================
+    Template Name: Instant
+    Template URL: https://templatemag.com/instant-bootstrap-personal-template/
+    Author: TemplateMag.com
+    License: https://templatemag.com/license/
+  ======================================================= -->
+  </script>
+</head>
+
+<body>
+
+  <!-- Static navbar -->
+  <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        <a class="navbar-brand" href="index.html">COMP90024 - Group10</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="Group.html">Group</a></li>
+          <li><a href="works.html" class="smoothscroll">Works on Map</a></li>
+		  <li class="active"><a href="sentiment.html" class="smoothscroll">Sentiment Analysis</a></li>
+          <li><a href="contact.html" class="smoothscroll">Contact</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </div>
+
+<div id="sentimentwrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-3">
+        <h1>Sentiment Analysis</h1>
+          <h2>Tweets about Covid-19 in Austrialia</h2>
+      </div>
+    </div>
+  </div>
+  <!-- /container -->
+</div>
+
+<section id="work" style="margin-top: -50px"></section>
+<div class="container">
+  <div class="row centered mt mb">
+    <div class="col-lg-8 col-lg-offset-2">
+      <h4>Sentiment Analysis</h4>
+      <p style="text-align:justify">Sentiment analysis has been done on the tweet contents to assign an attitude
+	  to the tweet which differs from positive, neutral and negative.There's attitude ratios towards COVID-19 for seven cities are plotted 
+	  along with the High Education rate and High Life Satisfaction rate. For cities,in general, Australia shows a positive attitude
+	  towards the disease which may be due to the high stage of medical and biological science development in Australia. 
+	  Six cities except Darwin follow the pattern that there are more people being positive than negative towards the COVID-19.
+	  Adelaide has the highest positive rate among 7 cities which is 40.49% and Darwin has the highest negative rate which is 40.74%.
+</p>
+    <br>
+    </div>
+	</div>
+	</div>
+	
+
+	<ul class="nav nav-tabs">
+  <li class="active"><a data-tab href="#tabContent1">Melbourne</a></li>
+  <li><a data-tab href="#tabContent2">Sydney</a></li>
+  <li><a data-tab href="#tabContent3">Perth</a></li>
+  <li><a data-tab href="#tabContent4">Brisbane</a></li>
+  <li><a data-tab href="#tabContent5">Adelaide</a></li>
+  <li><a data-tab href="#tabContent6">Hobart</a></li>
+  <li><a data-tab href="#tabContent7">Darwin</a></li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="tabContent1" >
+    <div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+	var chart =Highcharts.chart('container', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Melbourne'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+			name: 'Positive Rate',
+			y: 0.39
+		}, {
+			name: 'Negative Rate',
+			y: 0.33
+		},{
+			name: 'Neutral Rate',
+			y: 0.29,
+		}]
+	}]
+});
+    </script>
+  </div>
+ </div>
+  <div class="tab-pane" id="tabContent2" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+    <div id="container2" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+	var chart =Highcharts.chart('container2', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Sydney'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+			name: 'Positive Rate',
+			y: 0.36
+		}, {
+			name: 'Negative Rate',
+			y: 0.36
+		},{
+			name: 'Neutral Rate',
+			y: 0.28,
+		}]
+	}]
+});
+  
+    </script>
+  </div>
+   </div>
+  <div class="tab-pane" id="tabContent3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+    <div id="container3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+	var chart =Highcharts.chart('container3', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Perth'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+		    
+			name: 'Positive Rate',
+			y: 0.38
+		}, {
+		   
+			name: 'Negative Rate',
+			y: 0.3
+		},{
+		                                                                                                                    
+			name: 'Neutral Rate',
+			y: 0.32,
+		}]
+	}]
+});
+    </script>
+  </div>
+    </div>
+  <div class="tab-pane" id="tabContent4" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+    <div id="container4" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+		var chart =Highcharts.chart('container4', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Brisbane'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+		   
+			name: 'Positive Rate',
+			y: 0.4
+		}, {
+		   
+			name: 'Negative Rate',
+			y: 0.31
+		},{
+		                                                                                                                     
+			name: 'Neutral Rate',
+			y: 0.29,
+		}]
+	}]
+});
+    </script>
+  </div>
+    </div>
+  <div class="tab-pane" id="tabContent5" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+    <div id="container5" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+		var chart =Highcharts.chart('container5', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Adelaide'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+		   
+			name: 'Positive Rate',
+			y: 0.4
+		}, {
+	
+			name: 'Negative Rate',
+			y: 0.31
+		},{
+		                                                                                                            
+			name: 'Neutral Rate',
+			y: 0.29,
+		}]
+	}]
+});
+    </script>
+  </div>
+    </div>
+  <div class="tab-pane" id="tabContent6" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+    <div id="container6" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+		var chart =Highcharts.chart('container6', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Hobart'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+		 
+			name: 'Positive Rate',
+			y: 0.38
+		}, {
+		 
+			name: 'Negative Rate',
+			y: 0.35
+		},{
+		                                                                                                                 
+			name: 'Neutral Rate',
+			y: 0.27,
+		}]
+	}]
+});
+    </script>
+  </div>
+    </div>
+  <div class="tab-pane" id="tabContent7" >
+    <div id="container7" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+		var chart =Highcharts.chart('container7', {
+	chart: {
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
+		type: 'pie'
+	},
+	title: {
+		text: 'Sentiment Analysis in Darwin'
+	},
+	tooltip: {
+		pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	},
+	plotOptions: {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				}
+			}
+		}
+	},
+	series: [{
+		name: 'Brands',
+		colorByPoint: true,
+		data: [ {
+		    
+			name: 'Positive Rate',
+			y: 0.37
+		}, {
+		 
+			name: 'Negative Rate',
+			y: 0.41
+		},{
+		                                                                                                                
+			name: 'Neutral Rate',
+			y: 0.22,
+		}]
+	}]
+});
+    </script>
+  </div>
+    </div>
+</div>
+
+<div id="container1" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto;">
+	<script>
+	var chart1 = Highcharts.chart('container1', {
+	title: {
+		text: 'Sentiment_Edu_Life'
+	},
+	xAxis: {
+		categories: [ "Sydney",
+					 "Melbourne",
+					 "Brisbane",
+					 "Adelaide",
+					 "Perth",
+					 "Hobart",
+					 "Darwin"]
+	},
+	yAxis: {
+		min: 0,
+		title: {
+			text: '',
+			align: 'high'
+		},
+		labels: {
+			overflow: 'justify'
+		}
+	},
+	plotOptions: {
+		series: {
+			bar: {
+				dataLabels: {
+					enabled: true,
+					allowOverlap: true // 允许数据标签重叠
+				}
+			}
+		}
+	},
+	series: [{
+		type: 'column',
+		name: 'High Education Rate',
+		data: [0.45,
+			   0.45,
+			   0.38,
+			   0.37,
+			   0.37,
+			   0.36,
+			   0.3]
+	}, {
+		type: 'column',
+		name: 'High Life Satisfaction Rate',
+		data: [ 0.662256,
+			   0.673441,
+			   0.570074,
+			   0.599754,
+			   0.611134,
+			   0.630383,
+			   0.673206]
+	}, {
+		type: 'spline',
+		name: 'Neutral Rate',
+		data: [0.28,
+			   0.29,
+			   0.32,
+			   0.29,
+			   0.29,
+			   0.27,
+			   0.22]
+	},{
+		type: 'spline',
+		name: 'Nagative Rate',
+		data: [0.36,
+			   0.33,
+			   0.3,
+			   0.31,
+			   0.31,
+			   0.35,
+			   0.41]
+	}, {
+		type: 'spline',
+		name: 'Positive Rate',
+		data: [  0.36,
+			   0.39,
+			   0.38,
+			   0.4,
+			   0.4,
+			   0.38,
+			   0.37],
+		marker: {
+			lineWidth: 2,
+			lineColor: Highcharts.getOptions().colors[3],
+			fillColor: 'white'
+		}
+	}]
+});
+</script>
+</div>
+	
+ 
+  <div id="social">
+    <div class="container">
+      <div class="row centered">
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-dribbble"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-facebook"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-twitter"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-linkedin"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-instagram"></i></a>
+        </div>
+        <div class="col-lg-2">
+          <a href="#"><i class="fa fa-tumblr"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="copyrights">
+    <div class="container">
+      <p>
+        &copy; Copyrights <strong>Instant</strong>. All Rights Reserved
+      </p>
+      <div class="credits">
+        <!--
+          You are NOT allowed to delete the credit link to TemplateMag with free version.
+          You can delete the credit link only if you bought the pro version.
+          Buy the pro version with working PHP/AJAX contact form: https://templatemag.com/instant-bootstrap-personal-template/
+          Licensing information: https://templatemag.com/license/
+        -->
+        Created with Instant template by <a href="https://templatemag.com/">TemplateMag</a>
+      </div>
+    </div>
+  </div>
+  <!-- / copyrights -->
+
+  <!-- JavaScript Libraries -->
+  <script src="lib/jquery/jquery.min.js"></script>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="lib/php-mail-form/validate.js"></script>
+
+  <!-- Template Main Javascript File -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>

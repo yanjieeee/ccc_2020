@@ -1,0 +1,54 @@
+- hosts: Harvest
+  gather_facts: no
+
+  tasks:
+    - name: install the packages using apt modules
+      become: yes
+      apt: 
+        name: ['python3-pip','git','vim']
+        state: latest 
+        update_cache: yes
+      
+    - name: mkdir the mount point
+      become: yes
+      file:
+        path: /data
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+
+    - name: mkdir the /data/workspace
+      become: yes
+      file:
+        path: /data/workspace
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: 0755
+
+    - name: paste harvest program python file
+      become: yes
+      copy:
+        src: ./tweetHarvest/CCC2.py
+        dest: /data/workspace
+        mode: "644"
+        backup: no
+
+    - name: install python packages 
+      become: yes
+      pip:
+        name: ['couchdb','tweepy']
+        state: latest
+      
+    - name: run the streamer
+      become: yes
+      become_user: ubuntu
+      shell: |
+        cd /data/workspace
+        sudo python3 CCC2.py run
+ #       nohup python3 /data/workspace/CCC2.py >nohup.out 2&1 &
+      async: 45
+      poll: 0
+    
+        

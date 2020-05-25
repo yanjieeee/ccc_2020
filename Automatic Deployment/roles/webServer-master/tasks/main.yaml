@@ -1,0 +1,54 @@
+---
+
+- name: apt-get update
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: install the packages using apt modules
+  become: yes
+  apt: 
+    name: ['python3-pip','nginx']
+    state: latest
+    install_recommends: no 
+    update_cache: yes
+
+- name: modify nginx config 
+  become: yes
+  blockinfile:
+    path: /etc/nginx/nginx.conf
+    insertafter: 	gzip on;
+    state: present
+    block: "upstream backend {
+      \nserver {{ groups['webServer-worker'][0] }}:80 max_fails=2 fail_timeout=30s ;
+      \nserver {{ groups['webServer-worker'][1] }}:80 max_fails=2 fail_timeout=30s ;
+      \n}
+      \nserver {
+        \nlisten 80;
+        \nserver_name {{ ansible_eth0.ipv4.address }};
+        \nlocation / {
+          \nindex index.jsp index.html index.htm;
+          \nproxy_pass http://backend;
+          \nproxy_redirect off;
+	        	\nproxy_set_header Host $host;
+		        \nproxy_set_header X-Real-IP $remote_addr;
+		        \nproxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		        \nproxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504; 
+		        \n}
+            \n}"
+
+# - name: Couchdb config local.ini
+#   become: yes
+#   copy:
+#     src: ./templates/nginx.conf
+#     dest: /etc/nginx
+#     mode: "644"
+#     backup: no
+
+- name: restart nginx
+  shell: |
+    sudo killall nginx
+    sudo nginx -c /etc/nginx/nginx.conf
+    
+
+
